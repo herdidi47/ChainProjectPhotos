@@ -37,20 +37,51 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private boolean checkEmail() {
+        String email = txtEmail.getText().toString().trim();
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
+        if (!email.matches(emailPattern)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean checkPassword() {
+        String password = txtPassword.getText().toString();
+
+        if (password.length() < 4 ) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    void bindComponent () {
+        txtEmail = findViewById(R.id.txtEmail);
+        txtPassword = findViewById(R.id.txtPassword);
 
         btnLogin.setOnClickListener(v -> {
-            String email = txtEmail.getText().toString();
-            String password = txtPassword.getText().toString();
 
+            boolean formOK = true;
 
+            if (!checkEmail()){
+                Toast.makeText(MainActivity.this, "Invalid Email!", Toast.LENGTH_SHORT).show();
+                formOK = false;
+            }
+
+            if (!checkPassword()) {
+                Toast.makeText(MainActivity.this, "Password didn't meet requirement", Toast.LENGTH_SHORT).show();
+                formOK = false;
+            }
+
+            if (formOK) {
                 Intent keHome = new Intent(MainActivity.this, Home.class);
-                keHome.putExtra("Email", email);
-                keHome.putExtra("Password", password);
                 startActivity(keHome);
-
-
-
-
+            }
         });
 
 
@@ -93,6 +124,3 @@ public class MainActivity extends AppCompatActivity {
 
     }
 }
-
-
-
