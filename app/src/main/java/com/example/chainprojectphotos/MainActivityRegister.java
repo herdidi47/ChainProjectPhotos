@@ -60,7 +60,7 @@ public class MainActivityRegister  extends AppCompatActivity {
     private boolean validatePassword() {
         String password = txtPassword.getText().toString();
 
-        if (password.length() < 8 ) {
+        if (password.length() < 4 ) {
             return false;
         } else {
             return true;
@@ -69,7 +69,6 @@ public class MainActivityRegister  extends AppCompatActivity {
 
     private boolean validateGender() {
         if (rg_gender.getCheckedRadioButtonId()== -1) {
-            Toast.makeText(MainActivityRegister.this, "Gender must be chosen", Toast.LENGTH_SHORT).show();
             return false;
         }
         else {
@@ -96,7 +95,13 @@ public class MainActivityRegister  extends AppCompatActivity {
         }
     }
 
+
     private boolean validateAge(){
+        if (null == datePickerDialog) {
+            Toast.makeText(MainActivityRegister.this, "You must select a date!", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         int userAge = datePickerDialog.getDatePicker().getYear();
         int ageValid =  currentYear - userAge;
@@ -109,16 +114,9 @@ public class MainActivityRegister  extends AppCompatActivity {
     }
 
     private boolean validateCheckbox() {
-        if (cb_terms.isChecked()) {
-            Toast.makeText(MainActivityRegister.this, "You must be agree to terms and condition!", Toast.LENGTH_SHORT).show();
-            return false;
-        } else {
-            return true;
-        }
+        return cb_terms.isChecked();
 
     }
-
-
 
         void bindComponent () {
             txtName = findViewById(R.id.txtName);
@@ -137,7 +135,7 @@ public class MainActivityRegister  extends AppCompatActivity {
             txtDatepicker.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    datePickerDialog = new DatePickerDialog(
                             MainActivityRegister.this, android.R.style.Theme_Holo_Dialog_MinWidth,
                             setListener, year, month, day);
                     datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -154,47 +152,47 @@ public class MainActivityRegister  extends AppCompatActivity {
                 }
             };
 
+            btn_regist.setOnClickListener(v -> {
 
-        btn_regist.setOnClickListener(v -> {
+                boolean formOK = true;
 
-            if (validateName() == false) {
-                Toast.makeText(MainActivityRegister.this, "Name must be longer than 4 character", Toast.LENGTH_SHORT).show();
-            } else {
-                    Toast.makeText(MainActivityRegister.this, "Register Success", Toast.LENGTH_SHORT).show();
-            }
+                if (!validateName()) {
+                    Toast.makeText(MainActivityRegister.this, "Name must be longer than 4 character", Toast.LENGTH_SHORT).show();
+                    formOK = false;
+                }
 
-            if (validateEmail()){
-                Toast.makeText(MainActivityRegister.this, "Invalid Email!", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(MainActivityRegister.this, "Register Success", Toast.LENGTH_SHORT).show();
-            }
-            if (validatePassword()) {
-                Toast.makeText(MainActivityRegister.this, "Register Succes", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(MainActivityRegister.this, "Register Failed", Toast.LENGTH_SHORT).show();
-            }
+                if (!validateEmail()){
+                    Toast.makeText(MainActivityRegister.this, "Invalid Email!", Toast.LENGTH_SHORT).show();
+                    formOK = false;
+                }
 
-            if (validateGender()) {
-                Toast.makeText(MainActivityRegister.this, "Register Succes", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(MainActivityRegister.this, "Register Failed", Toast.LENGTH_SHORT).show();
-            }
+                if (!validatePassword()) {
+                    Toast.makeText(MainActivityRegister.this, "Password didn't meet requirement", Toast.LENGTH_SHORT).show();
+                    formOK = false;
+                }
 
-            if (validateAddress()) {
-                Toast.makeText(MainActivityRegister.this, "Register Succes", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(MainActivityRegister.this, "Register Failed", Toast.LENGTH_SHORT).show();
-            }
-            if (validateAge()) {
-                Toast.makeText(MainActivityRegister.this, "You must be older than 17 years old", Toast.LENGTH_SHORT).show();
-            }
-            if (validateCheckbox()) {
-                Toast.makeText(MainActivityRegister.this, "Register Succes", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(MainActivityRegister.this, "Register Failed", Toast.LENGTH_SHORT).show();
-            }
+                if (!validateAddress()){
+                    formOK = false;
+                }
 
-        });
+                if (!validateGender()){
+                    Toast.makeText(MainActivityRegister.this, "You didn't choose any gender", Toast.LENGTH_SHORT).show();
+                    formOK = false;
+                }
+
+                if (!validateAge()){
+                    Toast.makeText(MainActivityRegister.this, "You must be older than 17 years old", Toast.LENGTH_SHORT).show();
+                    formOK = false;
+                }
+
+                if (!validateCheckbox()){
+                    Toast.makeText(MainActivityRegister.this,"You must be agree to terms and conditions", Toast.LENGTH_SHORT).show();
+                    formOK = false;
+                }
+
+
+                if (formOK) Toast.makeText(MainActivityRegister.this, "Register Success", Toast.LENGTH_SHORT).show();
+            });
     }
 
 
@@ -222,4 +220,3 @@ public class MainActivityRegister  extends AppCompatActivity {
 
 
         }
-
